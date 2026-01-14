@@ -1,0 +1,9 @@
+[submodule "Sources/CLibdave/libdave"]
+	path = Sources/CLibdave/libdave
+	url = git@github.com:discord/libdave.git
+[submodule "Sources/CMLS/mlspp"]
+	path = Sources/CMLS/mlspp
+	url = git@github.com:cisco/mlspp.git
+[submodule "Sources/CJson/json"]
+	path = Sources/CJson/json
+	url = git@github.com:nlohmann/json.git
