@@ -22,6 +22,8 @@ extension Logger.Level {
     }
 }
 
+/// Callback function registered with libdave via `daveSetLogSinkCallback`.
+/// This function translates libdave log messages into Swift Logging framework log messages.
 func logSyncCallback(
     severity: DAVELoggingSeverity,
     file: UnsafePointer<CChar>?,

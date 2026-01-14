@@ -46,9 +46,13 @@ public actor DaveSessionManager {
         encryptor.setPassthroughMode(enabled: true)
     }
 
-    nonisolated func maxSupportedProtocolVersion() -> UInt16 {
+    // MARK: - Static (informational) Methods
+
+    public static nonisolated func maxSupportedProtocolVersion() -> UInt16 {
         return daveMaxSupportedProtocolVersion()
     }
+
+    // MARK: - User Management
 
     public func addUser(userId: String) {
         decryptors[userId] = Decryptor()
@@ -58,6 +62,8 @@ public actor DaveSessionManager {
     public func removeUser(userId: String) {
         decryptors.removeValue(forKey: userId)
     }
+
+    // MARK: - Encryption / Decryption
 
     public func encrypt(
         ssrc: UInt32,
