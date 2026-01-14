@@ -6,7 +6,7 @@ public actor DaveSessionManager {
     private static let DISABLED_PROTOCOL_VERSION = 0
     private static let MLS_NEW_GROUP_EXPECTED_EPOCH = 1
 
-    private let sessionHandle: DAVESessionHandle
+    private let session: DaveSession
     private let selfUserId: String
     
     private var lastPreparedTransitionVersion: UInt16 = 0
@@ -16,13 +16,9 @@ public actor DaveSessionManager {
     private var decryptors: [String: Decryptor] = [:]
 
     init(selfUserId: String) {
-        sessionHandle = daveSessionCreate(nil, nil, { _, _, _ in }, nil);
+        session = DaveSession()
         encryptor = Encryptor()
         self.selfUserId = selfUserId
-    }
-
-    deinit {
-        daveSessionDestroy(self.sessionHandle)
     }
 
     nonisolated func maxSupportedProtocolVersion() -> UInt16 {
@@ -58,7 +54,7 @@ public actor DaveSessionManager {
         }
 
         if protocolVersion == Self.DISABLED_PROTOCOL_VERSION {
-            daveSessionReset(self.sessionHandle)
+            self.session.reset()
         }
 
         setupKeyRatchetForEncryptor(protocolVersion: protocolVersion)
@@ -71,7 +67,7 @@ public actor DaveSessionManager {
         }
 
         encryptor.setPassthroughMode(enabled: false)
-        encryptor.setKeyRatchet(keyRatchet: .init(handle: daveSessionGetKeyRatchet(self.sessionHandle, self.selfUserId)))
+        encryptor.setKeyRatchet(keyRatchet: session.getKeyRatchet(userId: self.selfUserId))
     }
 
     private func setupKeyRatchetForUser(userId: String, protocolVersion: UInt16) {        
@@ -85,6 +81,6 @@ public actor DaveSessionManager {
         }
 
         decryptor.transitionToPassthroughMode(enabled: false)
-        decryptor.transitionToKeyRatchet(keyRatchet: .init(handle: daveSessionGetKeyRatchet(self.sessionHandle, userId)))
+        decryptor.transitionToKeyRatchet(keyRatchet: session.getKeyRatchet(userId: userId))
     }
 }
