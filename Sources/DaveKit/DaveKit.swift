@@ -30,7 +30,7 @@ public actor DaveSessionManager {
 
     // MARK: - Initializer
 
-    init(
+    public init(
         selfUserId: String,
         groupId: UInt64,
         delegate: DaveSessionDelegate,
