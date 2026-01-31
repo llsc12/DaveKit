@@ -1,4 +1,4 @@
-import libdave
+import CLibdave
 
 class Commit {
     private let handle: DAVECommitResultHandle

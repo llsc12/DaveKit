@@ -1,4 +1,4 @@
-import libdave
+import CLibdave
 import Logging
 
 let logger = Logger(label: "net.robort.davekit")
@@ -6,18 +6,16 @@ let logger = Logger(label: "net.robort.davekit")
 extension Logger.Level {
     init?(from: DAVELoggingSeverity) {
         switch from {
-        case DAVE_LOGGING_SEVERITY_NONE:
+        case .LOGGING_SEVERITY_NONE:
             return nil
-        case DAVE_LOGGING_SEVERITY_VERBOSE:
+        case .LOGGING_SEVERITY_VERBOSE:
             self = .debug
-        case DAVE_LOGGING_SEVERITY_INFO:
+        case .LOGGING_SEVERITY_INFO:
             self = .info
-        case DAVE_LOGGING_SEVERITY_WARNING:
+        case .LOGGING_SEVERITY_WARNING:
             self = .warning
-        case DAVE_LOGGING_SEVERITY_ERROR:
+        case .LOGGING_SEVERITY_ERROR:
             self = .error
-        default:
-            return nil
         }
     }
 }

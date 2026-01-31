@@ -1,4 +1,4 @@
-import libdave
+import CLibdave
 import Foundation
 
 class Encryptor {
@@ -35,7 +35,7 @@ class Encryptor {
 
                 return daveEncryptorEncrypt(
                     self.encryptorHandle,
-                    mediaType.rawValue,
+                    mediaType,
                     ssrc,
                     data.baseAddress!,
                     data.count,

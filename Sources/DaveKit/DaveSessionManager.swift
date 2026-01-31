@@ -1,4 +1,4 @@
-import libdave
+@_exported import CLibdave
 import Foundation
 import Logging
 

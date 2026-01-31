@@ -17,7 +17,7 @@ let package = Package(
         .target(
             name: "DaveKit",
             dependencies: [
-                .target(name: "libdave"),
+                .target(name: "CLibdave"),
                 .product(name: "Logging", package: "swift-log"),
             ],
             swiftSettings: [
@@ -26,27 +26,26 @@ let package = Package(
         ),
 
         .target(
-            name: "libdave",
+            name: "CLibdave",
             dependencies: [
                 .target(name: "mlspp"),
                 .target(name: "bytes"),
                 .target(name: "tls_syntax"),
             ],
-            path: "Sources/CLibdave/libdave/cpp",
             exclude: [
-                "test",
-                "src/dave/mls/detail/persisted_key_pair_apple.cpp",
-                "src/dave/mls/detail/persisted_key_pair_null.cpp",
-                "src/dave/mls/detail/persisted_key_pair_win.cpp",
-                "src/dave/bindings_wasm.cpp",
-                "src/dave/boringssl_cryptor.cpp",
-                "src/dave/boringssl_cryptor.h",
+                "libdave/cpp/test",
+                "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
+                "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
+                "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
+                "libdave/cpp/src/bindings_wasm.cpp",
+                "libdave/cpp/src/boringssl_cryptor.cpp",
+                "libdave/cpp/src/boringssl_cryptor.h",
             ],
-            sources: ["src"],
-            publicHeadersPath: "includes",
+            sources: ["libdave/cpp/src"],
             cxxSettings: [
-                .headerSearchPath("src"),
-            ]
+                .headerSearchPath("libdave/cpp/includes"),
+                .headerSearchPath("libdave/cpp/src"),
+            ],
         ),
 
         .target(

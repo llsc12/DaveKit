@@ -1,4 +1,4 @@
-import libdave
+import CLibdave
 import Foundation
 
 class Decryptor {
@@ -31,7 +31,7 @@ class Decryptor {
 
                 return daveDecryptorDecrypt(
                     self.decryptorHandle,
-                    mediaType.rawValue,
+                    mediaType,
                     data.baseAddress!,
                     data.count,
                     decryptedData.baseAddress!,
