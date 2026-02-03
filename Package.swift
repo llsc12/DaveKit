@@ -75,7 +75,7 @@ let package = Package(
                 .target(name: "mlspp_namespace"),
                 .target(name: "bytes"),
                 .target(name: "tls_syntax"),
-                .target(name: "json"),
+                .target(name: "CJson"),
             ],
             path: "Sources/CMLS/mlspp/lib/hpke",
             exclude: ["test"],
@@ -104,11 +104,7 @@ let package = Package(
             sources: ["src"],
         ),
 
-        .target(
-            name: "json",
-            path: "Sources/CJson/json/single_include",
-            publicHeadersPath: ".",
-        ),
+        .target(name: "CJson"),
 
         .testTarget(
             name: "DaveKitTests",
