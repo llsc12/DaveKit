@@ -1,11 +1,11 @@
 [submodule "Sources/CLibdave/libdave"]
 	path = Sources/CLibdave/libdave
-	url = git@github.com:discord/libdave.git
+	url = https://github.com/discord/libdave.git
 	shallow = true
 [submodule "Sources/CMLS/mlspp"]
 	path = Sources/CMLS/mlspp
-	url = git@github.com:cisco/mlspp.git
+	url = https://github.com/cisco/mlspp.git
 	shallow = true
 [submodule "Sources/CJson/json"]
 	path = Sources/CJson/json
-	url = git@github.com:nlohmann/json.git
+	url = https://github.com/nlohmann/json.git
