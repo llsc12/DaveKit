@@ -45,6 +45,7 @@ let package = Package(
         "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
         "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
         "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
+        "libdave/cpp/src/mls/persisted_key_pair_null.cpp",
         "libdave/cpp/src/bindings_wasm.cpp",
         "libdave/cpp/src/boringssl_cryptor.cpp",
         "libdave/cpp/src/boringssl_cryptor.h",
