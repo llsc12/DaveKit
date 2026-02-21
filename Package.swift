@@ -75,6 +75,7 @@ let package = Package(
     .target(
       name: "mlspp_namespace",
       path: "Sources/CMLS/namespace",
+      sources: ["dummy.c"],
       publicHeadersPath: ".",
     ),
 
@@ -114,7 +115,10 @@ let package = Package(
       sources: ["src"],
     ),
 
-    .target(name: "CJson"),
+    .target(
+      name: "CJson",
+      sources: ["dummy.c"],
+    ),
 
     .systemLibrary(
       name: "COpenSSL",
