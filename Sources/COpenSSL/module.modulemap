@@ -1,0 +1,7 @@
+module COpenSSL [system] {
+  header "/usr/local/include/openssl/ssl.h"
+  header "/usr/local/include/openssl/rand.h"
+  link "ssl"
+  link "crypto"
+  export *
+}

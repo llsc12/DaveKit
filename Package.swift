@@ -4,6 +4,14 @@ import PackageDescription
 
 let package = Package(
   name: "DaveKit",
+  platforms: [
+    .iOS(.v13),
+    .macOS(.v10_15),
+    .tvOS(.v13),
+    .watchOS(.v6),
+    .macCatalyst(.v13),
+    .visionOS(.v1),
+  ],
   products: [
     .library(
       name: "DaveKit",
@@ -76,6 +84,7 @@ let package = Package(
         .target(name: "bytes"),
         .target(name: "tls_syntax"),
         .target(name: "CJson"),
+        .target(name: "COpenSSL"),
       ],
       path: "Sources/CMLS/mlspp/lib/hpke",
       exclude: ["test"],
@@ -105,6 +114,15 @@ let package = Package(
     ),
 
     .target(name: "CJson"),
+
+    .systemLibrary(
+      name: "COpenSSL",
+      pkgConfig: "openssl",
+      providers: [
+        .brew(["openssl"]),
+        .apt(["libssl-dev"]),
+      ]
+    ),
 
     .testTarget(
       name: "DaveKitTests",
