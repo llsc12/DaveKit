@@ -42,9 +42,9 @@ let package = Package(
       ],
       exclude: [
         "libdave/cpp/test",
-        "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
-        "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
-        "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
+//        "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
+//        "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
+//        "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
         "libdave/cpp/src/mls/persisted_key_pair_null.cpp",
         "libdave/cpp/src/bindings_wasm.cpp",
         "libdave/cpp/src/boringssl_cryptor.cpp",
