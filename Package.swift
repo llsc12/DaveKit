@@ -19,8 +19,9 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-log", from: "1.9.0")
-  ],
+    .package(url: "https://github.com/apple/swift-log", from: "1.9.0"),
+	.package(url: "https://github.com/krzyzanowskim/OpenSSL-Package.git", from: "3.6.0000")
+],
   targets: [
     .target(
       name: "DaveKit",
@@ -42,9 +43,9 @@ let package = Package(
       ],
       exclude: [
         "libdave/cpp/test",
-//        "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
-//        "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
-//        "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
+        //        "libdave/cpp/src/mls/detail/persisted_key_pair_apple.cpp",
+        //        "libdave/cpp/src/mls/detail/persisted_key_pair_null.cpp",
+        //        "libdave/cpp/src/mls/detail/persisted_key_pair_win.cpp",
         "libdave/cpp/src/mls/persisted_key_pair_null.cpp",
         "libdave/cpp/src/bindings_wasm.cpp",
         "libdave/cpp/src/boringssl_cryptor.cpp",
@@ -86,7 +87,14 @@ let package = Package(
         .target(name: "bytes"),
         .target(name: "tls_syntax"),
         .target(name: "CJson"),
-        .target(name: "COpenSSL"),
+        .product(
+          name: "OpenSSL",
+          package: "OpenSSL-Package",
+          condition: .when(platforms: [
+            .iOS, .macOS, .tvOS, .watchOS, .visionOS,
+          ])
+        ),
+		.target(name: "COpenSSL", condition: .when(platforms: [.linux])),
       ],
       path: "Sources/CMLS/mlspp/lib/hpke",
       exclude: ["test"],
