@@ -43,6 +43,13 @@ let package = Package(
         .target(name: "mlspp"),
         .target(name: "bytes"),
         .target(name: "tls_syntax"),
+        .product(
+          name: "OpenSSL",
+          package: "OpenSSL-Package",
+          condition: .when(platforms: [
+            .iOS, .macOS, .tvOS, .watchOS, .visionOS,
+          ])
+        ),
       ],
       exclude: [
         "libdave/cpp/test",
@@ -111,7 +118,7 @@ let package = Package(
       exclude: ["test"],
       sources: ["src"],
       cxxSettings: [
-        .define("WITH_OPENSSL3"),
+        .define("WITH_OPENSSL3")
       ],
     ),
 
