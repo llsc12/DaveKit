@@ -20,8 +20,11 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-log", from: "1.9.0"),
-	.package(url: "https://github.com/krzyzanowskim/OpenSSL-Package.git", from: "3.6.0000")
-],
+    .package(
+      url: "https://github.com/krzyzanowskim/OpenSSL-Package.git",
+      from: "3.6.0000"
+    ),
+  ],
   targets: [
     .target(
       name: "DaveKit",
@@ -64,12 +67,20 @@ let package = Package(
         .target(name: "hpke"),
         .target(name: "bytes"),
         .target(name: "tls_syntax"),
+        .product(
+          name: "OpenSSL",
+          package: "OpenSSL-Package",
+          condition: .when(platforms: [
+            .iOS, .macOS, .tvOS, .watchOS, .visionOS,
+          ])
+        ),
       ],
       path: "Sources/CMLS/mlspp",
       exclude: ["test"],
       sources: ["src"],
       cxxSettings: [
-        .define("WITH_PQ")
+        .define("WITH_PQ"),
+        .define("WITH_OPENSSL3"),
       ],
     ),
 
@@ -94,7 +105,7 @@ let package = Package(
             .iOS, .macOS, .tvOS, .watchOS, .visionOS,
           ])
         ),
-		.target(name: "COpenSSL", condition: .when(platforms: [.linux])),
+        .target(name: "COpenSSL", condition: .when(platforms: [.linux])),
       ],
       path: "Sources/CMLS/mlspp/lib/hpke",
       exclude: ["test"],
