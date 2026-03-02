@@ -80,7 +80,6 @@ let package = Package(
       sources: ["src"],
       cxxSettings: [
         .define("WITH_PQ"),
-        .define("WITH_BORINGSSL"),
         .define("WITH_OPENSSL3"),
       ],
     ),
@@ -113,7 +112,6 @@ let package = Package(
       sources: ["src"],
       cxxSettings: [
         .define("WITH_OPENSSL3"),
-		.define("WITH_BORINGSSL"),
       ],
     ),
 
