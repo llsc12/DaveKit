@@ -66,6 +66,8 @@ let package = Package(
       cxxSettings: [
         .headerSearchPath("libdave/cpp/includes"),
         .headerSearchPath("libdave/cpp/src"),
+        .define("WITH_PQ"),
+        .define("WITH_OPENSSL3"),
       ],
     ),
 
