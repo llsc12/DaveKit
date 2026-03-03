@@ -51,56 +51,115 @@ class DaveSession {
     }
 
     func processProposals(proposals: Data, knownUserIds: [String]) -> Data? {
-        var welcomeData: UnsafeMutablePointer<UInt8>?
-        var welcomeDataLength = 0
-        var knownUserIds = knownUserIds
-        let knownUserIdCount = knownUserIds.count
-        knownUserIds.withUnsafeMutableBytes { knownUserIds in
-            return proposals.withUnsafeBytes { proposals in
-                let proposals = proposals.bindMemory(to: UInt8.self)
-                let knownUserIds = knownUserIds.bindMemory(
-                    to: UnsafePointer<CChar>?.self)
-                return daveSessionProcessProposals(
-                    self.sessionHandle,
-                    proposals.baseAddress!,
-                    proposals.count,
-                    knownUserIds.baseAddress!,
-                    knownUserIdCount,
-                    &welcomeData,
-                    &welcomeDataLength,
-                )
-            }
-        }
+//        var welcomeData: UnsafeMutablePointer<UInt8>?
+//        var welcomeDataLength = 0
+//        var knownUserIds = knownUserIds
+//        let knownUserIdCount = knownUserIds.count
+//        knownUserIds.withUnsafeMutableBytes { knownUserIds in
+//            return proposals.withUnsafeBytes { proposals in
+//                let proposals = proposals.bindMemory(to: UInt8.self)
+//                let knownUserIds = knownUserIds.bindMemory(
+//                    to: UnsafePointer<CChar>?.self)
+//                return daveSessionProcessProposals(
+//                    self.sessionHandle,
+//                    proposals.baseAddress!,
+//                    proposals.count,
+//                    knownUserIds.baseAddress!,
+//                    knownUserIdCount,
+//                    &welcomeData,
+//                    &welcomeDataLength,
+//                )
+//            }
+//        }
+//
+//        if let result = welcomeData {
+//            return Data(bytes: result, count: welcomeDataLength)
+//        } else {
+//            return nil
+//        }
+	  // the above handles passing swift strings badly. we should convert to
+	  // cstrings before passing to the c++ libdave.
+	  
+		var welcomeData: UnsafeMutablePointer<UInt8>?
+		var welcomeDataLength = 0
 
-        if let result = welcomeData {
-            return Data(bytes: result, count: welcomeDataLength)
-        } else {
-            return nil
-        }
+		// Allocate C strings
+		var cStrings: [UnsafePointer<CChar>?] = knownUserIds.map {
+			UnsafePointer(strdup($0))
+		}
+
+		defer {
+			for ptr in cStrings {
+				if let ptr = ptr {
+					free(UnsafeMutablePointer(mutating: ptr))
+				}
+			}
+		}
+
+		cStrings.withUnsafeMutableBufferPointer { buffer in
+			proposals.withUnsafeBytes { proposals in
+				let proposals = proposals.bindMemory(to: UInt8.self)
+
+				daveSessionProcessProposals(
+					self.sessionHandle,
+					proposals.baseAddress!,
+					proposals.count,
+					buffer.baseAddress,
+					buffer.count,
+					&welcomeData,
+					&welcomeDataLength
+				)
+			}
+		}
+
+		if let welcomeData {
+			return Data(bytes: welcomeData, count: welcomeDataLength)
+		}
+	  
+	    // free the welcome data since libdave allocates it
+	    if let welcomeData {
+	        daveFree(welcomeData)
+	    }
+
+		return nil
     }
 
-    func processWelcome(welcome: Data, knownUserIds: [String]) -> Welcome? {
-        var knownUserIds = knownUserIds
-        let result = knownUserIds.withUnsafeMutableBytes { knownUserIds in
-            welcome.withUnsafeBytes { welcome in
-                let knownUserIds = knownUserIds.bindMemory(to: UnsafePointer<CChar>?.self)
-                let welcome = welcome.bindMemory(to: UInt8.self)
-                return daveSessionProcessWelcome(
-                    self.sessionHandle,
-                    welcome.baseAddress!,
-                    welcome.count,
-                    knownUserIds.baseAddress!,
-                    knownUserIds.count,
-                )
-            }
-        }
+  func processWelcome(welcome: Data, knownUserIds: [String]) -> Welcome? {
 
-        if let result = result {
-            return Welcome(handle: result)
-        } else {
-            return nil
-        }
-    }
+	  var cStrings: [UnsafePointer<CChar>?] = knownUserIds.map { .init(strdup($0)) }
+
+	  defer {
+		  for ptr in cStrings {
+			  if let ptr = ptr {
+				  free(UnsafeMutablePointer(mutating: ptr))
+			  }
+		  }
+	  }
+
+	  let handle: DAVEWelcomeResultHandle? =
+		  cStrings.withUnsafeMutableBufferPointer { buffer in
+			  welcome.withUnsafeBytes { welcomeBytes in
+				  guard let base =
+					  welcomeBytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
+				  else { return DAVEWelcomeResultHandle(bitPattern: 0)! }
+
+
+				  return daveSessionProcessWelcome(
+					  self.sessionHandle,
+					  base,
+					  welcomeBytes.count,
+					  buffer.baseAddress,
+					  buffer.count
+				  )
+			  }
+		  }
+
+	  if let handle {
+		  return Welcome(handle: handle)
+	  } else {
+		  return nil
+	  }
+  }
 
     func processCommit(commit: Data) -> Commit? {
         let handle = commit.withUnsafeBytes { commit in
