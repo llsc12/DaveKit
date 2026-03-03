@@ -50,6 +50,7 @@ let package = Package(
             .iOS, .macOS, .tvOS, .watchOS, .visionOS,
           ])
         ),
+        .target(name: "COpenSSL", condition: .when(platforms: [.linux])),
       ],
       exclude: [
         "libdave/cpp/test",
@@ -81,6 +82,7 @@ let package = Package(
             .iOS, .macOS, .tvOS, .watchOS, .visionOS,
           ])
         ),
+        .target(name: "COpenSSL", condition: .when(platforms: [.linux])),
       ],
       path: "Sources/CMLS/mlspp",
       exclude: ["test"],
@@ -118,7 +120,8 @@ let package = Package(
       exclude: ["test"],
       sources: ["src"],
       cxxSettings: [
-        .define("WITH_OPENSSL3")
+        .define("WITH_PQ"),
+        .define("WITH_OPENSSL3"),
       ],
     ),
 
