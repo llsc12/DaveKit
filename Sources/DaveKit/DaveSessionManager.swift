@@ -207,7 +207,11 @@ public actor DaveSessionManager {
         }
 
         encryptor.setPassthroughMode(enabled: false)
-        encryptor.setKeyRatchet(keyRatchet: session.getKeyRatchet(userId: self.selfUserId))
+        if let keyRatchet = session.getKeyRatchet(userId: selfUserId) {
+			encryptor.setKeyRatchet(keyRatchet: keyRatchet)
+		} else {
+		  logger.debug("No key ratchet yet; skipping setupKeyRatchetForEncryptor")
+		}
     }
 
     private func setupKeyRatchetForUser(userId: String, protocolVersion: UInt16) {        
@@ -221,6 +225,11 @@ public actor DaveSessionManager {
         }
 
         decryptor.transitionToPassthroughMode(enabled: false)
-        decryptor.transitionToKeyRatchet(keyRatchet: session.getKeyRatchet(userId: userId))
+	  
+		if let keyRatchet = session.getKeyRatchet(userId: userId) {
+			decryptor.transitionToKeyRatchet(keyRatchet: keyRatchet)
+		} else {
+		  logger.debug("No key ratchet yet for user \(userId); skipping setupKeyRatchetForUser")
+		}
     }
 }

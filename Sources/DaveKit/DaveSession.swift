@@ -11,8 +11,12 @@ class DaveSession {
         daveSessionDestroy(self.sessionHandle)
     }
 
-    func getKeyRatchet(userId: String) -> KeyRatchet {
-        KeyRatchet(handle: daveSessionGetKeyRatchet(self.sessionHandle, userId))
+    func getKeyRatchet(userId: String) -> KeyRatchet? {
+		if let handle = daveSessionGetKeyRatchet(self.sessionHandle, userId) {
+			return KeyRatchet(handle: handle)
+		} else {
+			return nil
+		}
     }
 
     func reset() {
@@ -51,35 +55,6 @@ class DaveSession {
     }
 
     func processProposals(proposals: Data, knownUserIds: [String]) -> Data? {
-//        var welcomeData: UnsafeMutablePointer<UInt8>?
-//        var welcomeDataLength = 0
-//        var knownUserIds = knownUserIds
-//        let knownUserIdCount = knownUserIds.count
-//        knownUserIds.withUnsafeMutableBytes { knownUserIds in
-//            return proposals.withUnsafeBytes { proposals in
-//                let proposals = proposals.bindMemory(to: UInt8.self)
-//                let knownUserIds = knownUserIds.bindMemory(
-//                    to: UnsafePointer<CChar>?.self)
-//                return daveSessionProcessProposals(
-//                    self.sessionHandle,
-//                    proposals.baseAddress!,
-//                    proposals.count,
-//                    knownUserIds.baseAddress!,
-//                    knownUserIdCount,
-//                    &welcomeData,
-//                    &welcomeDataLength,
-//                )
-//            }
-//        }
-//
-//        if let result = welcomeData {
-//            return Data(bytes: result, count: welcomeDataLength)
-//        } else {
-//            return nil
-//        }
-	  // the above handles passing swift strings badly. we should convert to
-	  // cstrings before passing to the c++ libdave.
-	  
 		var welcomeData: UnsafeMutablePointer<UInt8>?
 		var welcomeDataLength = 0
 
