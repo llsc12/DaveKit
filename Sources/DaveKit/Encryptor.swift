@@ -54,7 +54,7 @@ class Encryptor {
     return encryptedData
   }
   
-  func assign(ssrc: UInt32, to codec: DAVECodec) {
+  func assign(ssrc: UInt32, to codec: Codec) {
 	daveEncryptorAssignSsrcToCodec(encryptorHandle, ssrc, codec)
   }
 }

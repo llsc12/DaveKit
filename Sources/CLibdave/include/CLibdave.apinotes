@@ -3,6 +3,7 @@ Name: CLibdave
 Tags:
 - Name: DAVECodec
   EnumExtensibility: closed
+  SwiftName: Codec
 - Name: DAVEMediaType
   EnumExtensibility: closed
   SwiftName: MediaType
@@ -13,3 +14,17 @@ Enumerators:
   SwiftName: MediaType.audio
 - Name: DAVE_MEDIA_TYPE_VIDEO
   SwiftName: MediaType.video
+- Name: DAVE_CODEC_UNKNOWN
+  SwiftName: Codec.unknown
+- Name: DAVE_CODEC_OPUS
+  SwiftName: Codec.opus
+- Name: DAVE_CODEC_VP8
+  SwiftName: Codec.vp8
+- Name: DAVE_CODEC_VP9
+  SwiftName: Codec.vp9
+- Name: DAVE_CODEC_H264
+  SwiftName: Codec.h264
+- Name: DAVE_CODEC_H265
+  SwiftName: Codec.h265
+- Name: DAVE_CODEC_AV1
+  SwiftName: Codec.av1

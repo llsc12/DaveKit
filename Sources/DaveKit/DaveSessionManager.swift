@@ -70,7 +70,7 @@ public actor DaveSessionManager {
 
   public func assign(
     ssrc: UInt32,
-    to codec: DAVECodec
+	to codec: Codec
   ) {
     encryptor.assign(ssrc: ssrc, to: codec)
   }
