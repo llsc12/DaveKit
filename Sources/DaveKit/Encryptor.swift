@@ -25,7 +25,8 @@ class Encryptor {
     data: Data,
     mediaType: MediaType = .audio,
   ) throws(EncryptError) -> Data {
-    var encryptedData = Data(count: data.count)
+    let overhead = 64
+    var encryptedData = Data(count: data.count + overhead)
     var outputLength: Int = 0
 
     let result = encryptedData.withUnsafeMutableBytes { encryptedData in
@@ -50,17 +51,21 @@ class Encryptor {
       throw error
     }
 
+    if outputLength > encryptedData.count {
+      throw EncryptError.bufferTooSmall(requiredSize: outputLength)
+    }
     encryptedData.removeSubrange(outputLength..<encryptedData.count)
     return encryptedData
   }
-  
+
   func assign(ssrc: UInt32, to codec: Codec) {
-	daveEncryptorAssignSsrcToCodec(encryptorHandle, ssrc, codec)
+    daveEncryptorAssignSsrcToCodec(encryptorHandle, ssrc, codec)
   }
 }
 
 public enum EncryptError: Error {
   case encryptionFailure
+  case bufferTooSmall(requiredSize: Int)
   case unknown(code: DAVEEncryptorResultCode)
 
   init?(rawValue: DAVEEncryptorResultCode) {
