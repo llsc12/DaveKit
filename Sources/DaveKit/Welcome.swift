@@ -1,13 +1,13 @@
 import CLibdave
 
 class Welcome {
-    private let handle: DAVEWelcomeResultHandle
+  private let handle: DAVEWelcomeResultHandle
 
-    init(handle: DAVEWelcomeResultHandle) {
-        self.handle = handle
-    }
+  init(handle: DAVEWelcomeResultHandle) {
+    self.handle = handle
+  }
 
-    deinit {
-        daveWelcomeResultDestroy(self.handle)
-    }
+  deinit {
+    daveWelcomeResultDestroy(self.handle)
+  }
 }
