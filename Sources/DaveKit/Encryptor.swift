@@ -53,6 +53,10 @@ class Encryptor {
     encryptedData.removeSubrange(outputLength..<encryptedData.count)
     return encryptedData
   }
+  
+  func assign(ssrc: UInt32, to codec: DAVECodec) {
+	daveEncryptorAssignSsrcToCodec(encryptorHandle, ssrc, codec)
+  }
 }
 
 public enum EncryptError: Error {

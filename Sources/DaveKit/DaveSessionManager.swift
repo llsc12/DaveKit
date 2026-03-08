@@ -56,7 +56,10 @@ public actor DaveSessionManager {
 
   public func addUser(userId: String) {
     decryptors[userId] = Decryptor()
-    setupKeyRatchetForUser(userId: userId, protocolVersion: self.lastPreparedTransitionVersion)
+    setupKeyRatchetForUser(
+      userId: userId,
+      protocolVersion: self.lastPreparedTransitionVersion
+    )
   }
 
   public func removeUser(userId: String) {
@@ -64,6 +67,13 @@ public actor DaveSessionManager {
   }
 
   // MARK: - Encryption / Decryption
+
+  public func assign(
+    ssrc: UInt32,
+    to codec: DAVECodec
+  ) {
+    encryptor.assign(ssrc: ssrc, to: codec)
+  }
 
   public func encrypt(
     ssrc: UInt32,
@@ -104,7 +114,9 @@ public actor DaveSessionManager {
   }
 
   // Opcode DAVE_PROTOCOL_PREPARE_TRANSITION (21)
-  public func prepareTransition(transitionId: UInt16, protocolVersion: UInt16) async {
+  public func prepareTransition(transitionId: UInt16, protocolVersion: UInt16)
+    async
+  {
     for userId in decryptors.keys {
       setupKeyRatchetForUser(userId: userId, protocolVersion: protocolVersion)
     }
@@ -124,7 +136,11 @@ public actor DaveSessionManager {
 
   // Opcode DAVE_PROTOCOL_EXECUTE_TRANSITION (22)
   public func executeTransition(transitionId: UInt16) {
-    guard let protocolVersion = preparedTransitions.removeValue(forKey: transitionId) else {
+    guard
+      let protocolVersion = preparedTransitions.removeValue(
+        forKey: transitionId
+      )
+    else {
       return
     }
 
@@ -141,26 +157,37 @@ public actor DaveSessionManager {
       return
     }
 
-    session.initialize(version: protocolVersion, groupId: groupId, selfUserId: selfUserId)
+    session.initialize(
+      version: protocolVersion,
+      groupId: groupId,
+      selfUserId: selfUserId
+    )
 
     await delegate?.mlsKeyPackage(keyPackage: session.getKeyPackage())
   }
 
   // Opcode MLS_EXTERNAL_SENDER_PACKAGE (25)
   public func mlsExternalSenderPackage(externalSenderPackage: Data) {
-    session.setExternalSenderPackage(externalSenderPackage: externalSenderPackage)
+    session.setExternalSenderPackage(
+      externalSenderPackage: externalSenderPackage
+    )
   }
 
   // Opcode MLS_PROPOSALS (27)
   public func mlsProposals(proposals: Data) async {
-    let welcome = session.processProposals(proposals: proposals, knownUserIds: knownUserIds)
+    let welcome = session.processProposals(
+      proposals: proposals,
+      knownUserIds: knownUserIds
+    )
     if let welcome = welcome {
       await delegate?.mlsCommitWelcome(welcome: welcome)
     }
   }
 
   // Opcode MLS_PREPARE_COMMIT_TRANSITION (29)
-  public func mlsPrepareCommitTransition(transitionId: UInt16, commit: Data) async {
+  public func mlsPrepareCommitTransition(transitionId: UInt16, commit: Data)
+    async
+  {
     let commit = session.processCommit(commit: commit)
 
     guard let commit, !commit.isFailed else {
@@ -174,7 +201,9 @@ public actor DaveSessionManager {
     }
 
     await prepareTransition(
-      transitionId: transitionId, protocolVersion: session.getProtocolVersion())
+      transitionId: transitionId,
+      protocolVersion: session.getProtocolVersion()
+    )
   }
 
   // Opcode MLS_WELCOME (30)
@@ -230,7 +259,9 @@ public actor DaveSessionManager {
     if let keyRatchet = session.getKeyRatchet(userId: userId) {
       decryptor.transitionToKeyRatchet(keyRatchet: keyRatchet)
     } else {
-      logger.debug("No key ratchet yet for user \(userId); skipping setupKeyRatchetForUser")
+      logger.debug(
+        "No key ratchet yet for user \(userId); skipping setupKeyRatchetForUser"
+      )
     }
   }
 }
