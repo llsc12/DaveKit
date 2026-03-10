@@ -30,11 +30,6 @@ func logSyncCallback(
 ) {
   let logMessage = String(cString: message!)
   if let level = Logger.Level(from: severity) {
-    logger.log(
-      level: level, "\(logMessage)",
-      metadata: [
-        "file": .string(String(cString: file!)),
-        "line": .stringConvertible(line),
-      ])
+    logger.log(level: level, "\(logMessage)")
   }
 }
