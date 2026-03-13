@@ -26,7 +26,7 @@ public actor DaveSessionManager {
   private var lastPreparedTransitionVersion: UInt16 = 0
   private var preparedTransitions: [UInt16: UInt16] = [:]
 
-  private weak let delegate: (any DaveSessionDelegate)?
+  private weak var delegate: (any DaveSessionDelegate)?
 
   // MARK: - Initializer
 
